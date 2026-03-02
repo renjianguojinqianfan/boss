@@ -1,219 +1,292 @@
 /* 拍照签到页面样式 */
 
+page {
+  background-color: #000;
+}
+
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 20rpx;
-  min-height: 100vh;
-  background-color: #f5f5f5;
+  height: 100vh;
+  background-color: #000;
 }
 
-/* 工人选择区域 */
-.worker-section {
-  width: 100%;
-  margin-bottom: 30rpx;
-  background-color: #ffffff;
-  padding: 20rpx;
-  border-radius: 10rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-}
-
-.label {
-  display: block;
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 15rpx;
-  color: #333333;
-}
-
-.picker {
-  width: 100%;
-  height: 80rpx;
-  background-color: #f9f9f9;
-  border-radius: 8rpx;
-  padding: 0 20rpx;
-  display: flex;
-  align-items: center;
-  border: 1rpx solid #e0e0e0;
-}
-
-.picker-text {
-  font-size: 30rpx;
-  color: #333333;
-}
-
-/* 信息区域 */
-.info-section {
-  width: 100%;
-  margin-bottom: 30rpx;
-  background-color: #ffffff;
-  padding: 20rpx;
-  border-radius: 10rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-}
-
-.info-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15rpx;
-}
-
-.info-item:last-child {
-  margin-bottom: 0;
-}
-
-.info-label {
-  font-size: 28rpx;
-  color: #666666;
-}
-
-.info-value {
-  font-size: 28rpx;
-  color: #333333;
-  font-weight: 500;
-  text-align: right;
+/* 相机容器 */
+.camera-container {
+  position: relative;
   flex: 1;
-  margin-left: 20rpx;
-}
-
-/* 相机区域 */
-.camera-section {
   width: 100%;
-  margin-bottom: 30rpx;
-  background-color: #000000;
-  border-radius: 10rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.2);
 }
 
 .camera {
   width: 100%;
-  height: 600rpx;
+  height: 100%;
 }
 
-.camera-tip {
-  padding: 20rpx;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #ffffff;
+/* 相机覆盖层 - 使用 cover-view */
+.camera-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none; /* 允许点击穿透到底层 */
+}
+
+/* 顶部信息栏 */
+.camera-header {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  padding: 40rpx 30rpx 60rpx;
+  pointer-events: auto;
+}
+
+.header-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10rpx;
+  align-items: center;
+}
+
+.header-label {
+  color: rgba(255,255,255,0.8);
+  font-size: 26rpx;
+  width: 80rpx;
+}
+
+.header-value {
+  color: #fff;
+  font-size: 26rpx;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.header-value.warning {
+  color: #ff9500;
+}
+
+/* 对焦框 - 透明背景 + 白色边框 */
+.focus-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300rpx;
+  height: 300rpx;
+  pointer-events: none;
+}
+
+.focus-corner {
+  position: absolute;
+  width: 40rpx;
+  height: 40rpx;
+  border-color: rgba(255,255,255,0.8);
+  border-style: solid;
+  background: transparent !important; /* 确保背景透明 */
+}
+
+.focus-corner.top-left {
+  top: 0;
+  left: 0;
+  border-width: 4rpx 0 0 4rpx;
+}
+
+.focus-corner.top-right {
+  top: 0;
+  right: 0;
+  border-width: 4rpx 4rpx 0 0;
+}
+
+.focus-corner.bottom-left {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 4rpx 4rpx;
+}
+
+.focus-corner.bottom-right {
+  bottom: 0;
+  right: 0;
+  border-width: 0 4rpx 4rpx 0;
+}
+
+/* 底部拍照区域 */
+.camera-footer {
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  padding: 60rpx 40rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.tip-text {
+  color: rgba(255,255,255,0.9);
   font-size: 28rpx;
-  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.button-text {
+  color: rgba(255,255,255,0.7);
+  font-size: 24rpx;
+  margin-top: 20rpx;
+}
+
+/* 拍照按钮 */
+.photo-button {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid rgba(255,255,255,0.8);
+}
+
+.photo-button.disabled {
+  opacity: 0.5;
+}
+
+.photo-button-inner {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background-color: #fff;
 }
 
 /* 预览区域 */
 .preview-section {
-  width: 100%;
-  margin-bottom: 30rpx;
-  background-color: #ffffff;
-  border-radius: 10rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
 }
 
 .preview-image {
-  width: 100%;
-  height: 600rpx;
-  background-color: #f0f0f0;
-}
-
-.preview-tip {
-  padding: 20rpx;
-  background-color: #f9f9f9;
-  color: #666666;
-  font-size: 28rpx;
-  text-align: center;
-}
-
-/* 按钮区域 */
-.button-section {
-  width: 100%;
-  margin-bottom: 30rpx;
-}
-
-.button {
-  width: 100%;
-  height: 90rpx;
-  font-size: 32rpx;
-  border-radius: 10rpx;
-  margin-bottom: 20rpx;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between;
-  gap: 20rpx;
-}
-
-.button-group .button {
   flex: 1;
+  width: 100%;
+  background-color: #1a1a1a;
+}
+
+.photo-info {
+  background-color: #1a1a1a;
+  padding: 30rpx;
+}
+
+.photo-info-item {
+  display: flex;
+  margin-bottom: 15rpx;
+}
+
+.photo-info-item:last-child {
   margin-bottom: 0;
 }
 
-.button.primary {
-  background-color: #007AFF;
-  color: #ffffff;
+.photo-info-label {
+  color: rgba(255,255,255,0.6);
+  font-size: 28rpx;
+  width: 100rpx;
 }
 
-.button.secondary {
-  background-color: #ffffff;
-  color: #333333;
-  border: 1rpx solid #e0e0e0;
+.photo-info-value {
+  color: #fff;
+  font-size: 28rpx;
+  flex: 1;
+}
+
+/* 工人选择器 */
+.worker-selector {
+  background-color: #1a1a1a;
+  padding: 30rpx;
+  border-top: 1rpx solid rgba(255,255,255,0.1);
+}
+
+.selector-label {
+  display: block;
+  color: rgba(255,255,255,0.8);
+  font-size: 28rpx;
+  margin-bottom: 20rpx;
+}
+
+.picker-box {
+  background-color: rgba(255,255,255,0.1);
+  border-radius: 10rpx;
+  padding: 25rpx 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-size: 32rpx;
+}
+
+.picker-box.disabled {
+  opacity: 0.5;
+}
+
+.picker-box .placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.picker-box .arrow {
+  color: rgba(255,255,255,0.5);
+  font-size: 24rpx;
+}
+
+/* 底部操作按钮 */
+.action-section {
+  display: flex;
+  gap: 20rpx;
+  padding: 30rpx;
+  background-color: #1a1a1a;
+}
+
+.btn-primary,
+.btn-secondary {
+  flex: 1;
+  height: 90rpx;
+  line-height: 90rpx;
+  border-radius: 10rpx;
+  font-size: 32rpx;
+  text-align: center;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: rgba(255,255,255,0.2);
+  color: #fff;
 }
 
 /* 加载动画 */
-.loading {
+.loading-mask {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0,0,0,0.7);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 9999;
 }
 
-.loading-content {
-  background-color: #ffffff;
-  padding: 40rpx;
-  border-radius: 10rpx;
-  box-shadow: 0 2rpx 20rpx rgba(0, 0, 0, 0.3);
+.loading-box {
+  background-color: rgba(255,255,255,0.9);
+  padding: 40rpx 60rpx;
+  border-radius: 12rpx;
 }
 
-.loading-content text {
-  font-size: 32rpx;
-  color: #333333;
-}
-
-/* 响应式设计 */
-@media (max-width: 375px) {
-  .camera {
-    height: 500rpx;
-  }
-  
-  .preview-image {
-    height: 500rpx;
-  }
-  
-  .button {
-    height: 80rpx;
-    font-size: 30rpx;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 600rpx;
-    margin: 0 auto;
-  }
-  
-  .camera {
-    height: 700rpx;
-  }
-  
-  .preview-image {
-    height: 700rpx;
-  }
+.loading-box text {
+  font-size: 30rpx;
+  color: #333;
 }

@@ -2,87 +2,107 @@
 <view class="container">
   <!-- 水印Canvas（隐藏） -->
   <canvas canvas-id="watermarkCanvas" style="width: 1px; height: 1px; position: absolute; top: -1000px;"></canvas>
-  <!-- 工人选择区域 -->
-  <view class="worker-section">
-    <text class="label">选择工人：</text>
-    <picker 
-      class="picker" 
-      value="{{selectedWorkerIndex}}" 
-      range="{{workerNames}}" 
-      bindchange="bindWorkerChange"
-      disabled="{{workerNames.length === 0}}"
-    >
-      <view class="picker-text">
-        {{workerNames.length > 0 ? workerNames[selectedWorkerIndex] : '请先添加工人'}}
-      </view>
-    </picker>
-  </view>
-
-  <!-- 位置和时间信息 -->
-  <view class="info-section">
-    <view class="info-item">
-      <text class="info-label">当前位置：</text>
-      <text class="info-value">{{locationInfo}}</text>
-    </view>
-    <view class="info-item">
-      <text class="info-label">当前时间：</text>
-      <text class="info-value">{{currentTime}}</text>
-    </view>
-  </view>
 
   <!-- 相机预览区域 -->
-  <view class="camera-section" wx:if="!hasTakenPhoto">
+  <view class="camera-container" wx:if="{{!hasTakenPhoto}}">
     <camera 
       class="camera" 
       device-position="back" 
       flash="off"
       binderror="handleCameraError"
-    ></camera>
-    <view class="camera-tip">请对准工人进行拍照</view>
+      resolution="high"
+    >
+      <!-- 使用 cover-view 覆盖在相机上 -->
+      <cover-view class="camera-overlay">
+        <!-- 顶部信息栏 -->
+        <cover-view class="camera-header">
+          <cover-view class="header-item">
+            <cover-view class="header-label">工人：</cover-view>
+            <cover-view class="header-value" wx:if="{{selectedWorker}}">{{selectedWorker.name}}</cover-view>
+            <cover-view class="header-value warning" wx:else>未选择</cover-view>
+          </cover-view>
+          
+          <cover-view class="header-item">
+            <cover-view class="header-label">时间：</cover-view>
+            <cover-view class="header-value">{{currentTime}}</cover-view>
+          </cover-view>
+          
+          <cover-view class="header-item">
+            <cover-view class="header-label">位置：</cover-view>
+            <cover-view class="header-value">{{locationInfo || '定位中...'}}</cover-view>
+          </cover-view>
+        </cover-view>
+
+        <!-- 对焦框（透明边框） -->
+        <cover-view class="focus-frame">
+          <cover-view class="focus-corner top-left"></cover-view>
+          <cover-view class="focus-corner top-right"></cover-view>
+          <cover-view class="focus-corner bottom-left"></cover-view>
+          <cover-view class="focus-corner bottom-right"></cover-view>
+        </cover-view>
+
+        <!-- 底部拍照按钮 -->
+        <cover-view class="camera-footer">
+          <cover-view class="tip-text">请对准工人进行拍照</cover-view>
+          <cover-view 
+            class="photo-button {{workerNames.length === 0 ? 'disabled' : ''}}"
+            bindtap="{{workerNames.length > 0 ? 'takePhoto' : ''}}"
+          >
+            <cover-view class="photo-button-inner"></cover-view>
+          </cover-view>
+          
+          <cover-view class="button-text">{{workerNames.length === 0 ? '请先添加工人' : '点击拍照'}}</cover-view>
+        </cover-view>
+      </cover-view>
+    </camera>
   </view>
 
   <!-- 照片预览区域 -->
-  <view class="preview-section" wx:else>
-    <image class="preview-image" src="{{photoPath}}" mode="aspectFill"></image>
-    <view class="preview-tip">照片已添加水印</view>
-  </view>
-
-  <!-- 操作按钮区域 -->
-  <view class="button-section">
-    <button 
-      class="button" 
-      type="primary" 
-      size="large" 
-      bindtap="takePhoto"
-      wx:if="!hasTakenPhoto"
-      disabled="{{workerNames.length === 0}}"
-    >
-      拍照
-    </button>
-    
-    <view wx:else class="button-group">
-      <button 
-        class="button secondary" 
-        type="default" 
-        size="large" 
-        bindtap="retakePhoto"
-      >
-        重新拍照
-      </button>
-      <button 
-        class="button primary" 
-        type="primary" 
-        size="large" 
-        bindtap="confirmCheckin"
-      >
-        确认签到
-      </button>
+  <view class="preview-section" wx:if="{{hasTakenPhoto}}">
+    <image class="preview-image" src="{{photoPath}}" mode="aspectFit"></image>
+    <view class="photo-info">
+      <view class="photo-info-item">
+        <text class="photo-info-label">工人：</text>
+        <text class="photo-info-value">{{selectedWorker ? selectedWorker.name : '未选择'}}</text>
+      </view>
+      <view class="photo-info-item">
+        <text class="photo-info-label">时间：</text>
+        <text class="photo-info-value">{{currentTime}}</text>
+      </view>
+      <view class="photo-info-item">
+        <text class="photo-info-label">位置：</text>
+        <text class="photo-info-value">{{locationInfo}}</text>
+      </view>
     </view>
   </view>
 
+  <!-- 工人选择器（仅在拍照前显示） -->
+  <view class="worker-selector" wx:if="{{!hasTakenPhoto}}">
+    <text class="selector-label">选择要签到的工人：</text>
+    <picker 
+      mode="selector"
+      range="{{workerNames}}"
+      value="{{selectedWorkerIndex}}"
+      bindchange="bindWorkerChange"
+      disabled="{{workerNames.length === 0}}"
+    >
+      <view class="picker-box {{workerNames.length === 0 ? 'disabled' : ''}}">
+        <text wx:if="{{workerNames.length > 0}}">{{workerNames[selectedWorkerIndex]}}</text>
+        <text wx:else class="placeholder">请先添加工人</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 底部操作按钮 -->
+  <view class="action-section" wx:if="{{hasTakenPhoto}}">
+    <button class="btn-secondary" bindtap="retakePhoto">重新拍照</button>
+    <button class="btn-primary" bindtap="confirmCheckin">确认签到</button>
+  </view>
+
   <!-- 加载动画 -->
-  <view class="loading" wx:if="isLoading">
-    <view class="loading-content">
+  <view class="loading-mask" wx:if="{{isLoading}}">
+    <view class="loading-box">
       <text>{{loadingText}}</text>
     </view>
   </view>

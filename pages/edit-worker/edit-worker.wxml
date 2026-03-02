@@ -1,0 +1,55 @@
+<!-- 编辑工人页面 - pages/edit-worker/edit-worker.wxml -->
+<view class="container">
+  <view class="page-title">编辑工人信息</view>
+
+  <view class="form">
+    <view class="form-item">
+      <text class="form-label">姓名 *</text>
+      <input 
+        type="text" 
+        placeholder="请输入工人姓名" 
+        value="{{name}}"
+        bindinput="onNameInput"
+        class="form-input"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">电话 *</text>
+      <input 
+        type="number" 
+        placeholder="请输入工人电话" 
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+        class="form-input"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">部门</text>
+      <input 
+        type="text" 
+        placeholder="请输入部门名称" 
+        value="{{department}}"
+        bindinput="onDeptInput"
+        class="form-input"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">职位</text>
+      <input 
+        type="text" 
+        placeholder="请输入职位" 
+        value="{{position}}"
+        bindinput="onPositionInput"
+        class="form-input"
+      />
+    </view>
+  </view>
+
+  <view class="button-group">
+    <button type="default" bindtap="cancel" class="btn-cancel">取消</button>
+    <button type="primary" bindtap="saveWorker" class="btn-save">保存</button>
+  </view>
+</view>

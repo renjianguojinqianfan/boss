@@ -12,7 +12,7 @@
 
   <!-- 工人列表 -->
   <view class="workers-list">
-    <block wx:for="{{workers}}" wx:key="{{item.id}}" wx:for-item="worker">
+    <block wx:for="{{workers}}" wx:key="id" wx:for-item="worker">
       <view class="worker-item">
         <view class="worker-info">
           <view class="worker-name">{{worker.name}}</view>
@@ -69,114 +69,4 @@
   >
     + 添加工人
   </button>
-
-  <!-- 添加工人弹窗 -->
-  <modal 
-    title="添加工人" 
-    show="{{showAddModal}}" 
-    bindconfirm="addWorker" 
-    bindcancel="closeModal"
-  >
-    <view class="form">
-      <view class="form-item">
-        <text class="form-label">姓名 *</text>
-        <input 
-          type="text" 
-          placeholder="请输入工人姓名" 
-          value="{{formData.name}}"
-          bindinput="handleInput"
-          data-field="name"
-          class="form-input"
-        />
-      </view>
-      <view class="form-item">
-        <text class="form-label">电话 *</text>
-        <input 
-          type="number" 
-          placeholder="请输入工人电话" 
-          value="{{formData.phone}}"
-          bindinput="handleInput"
-          data-field="phone"
-          class="form-input"
-        />
-      </view>
-      <view class="form-item">
-        <text class="form-label">部门</text>
-        <input 
-          type="text" 
-          placeholder="请输入部门名称" 
-          value="{{formData.department}}"
-          bindinput="handleInput"
-          data-field="department"
-          class="form-input"
-        />
-      </view>
-      <view class="form-item">
-        <text class="form-label">职位</text>
-        <input 
-          type="text" 
-          placeholder="请输入职位" 
-          value="{{formData.position}}"
-          bindinput="handleInput"
-          data-field="position"
-          class="form-input"
-        />
-      </view>
-    </view>
-  </modal>
-
-  <!-- 编辑工人弹窗 -->
-  <modal 
-    title="编辑工人" 
-    show="{{showEditModal}}" 
-    bindconfirm="editWorker" 
-    bindcancel="closeModal"
-  >
-    <view class="form">
-      <view class="form-item">
-        <text class="form-label">姓名 *</text>
-        <input 
-          type="text" 
-          placeholder="请输入工人姓名" 
-          value="{{formData.name}}"
-          bindinput="handleInput"
-          data-field="name"
-          class="form-input"
-        />
-      </view>
-      <view class="form-item">
-        <text class="form-label">电话 *</text>
-        <input 
-          type="number" 
-          placeholder="请输入工人电话" 
-          value="{{formData.phone}}"
-          bindinput="handleInput"
-          data-field="phone"
-          class="form-input"
-        />
-      </view>
-      <view class="form-item">
-        <text class="form-label">部门</text>
-        <input 
-          type="text" 
-          placeholder="请输入部门名称" 
-          value="{{formData.department}}"
-          bindinput="handleInput"
-          data-field="department"
-          class="form-input"
-        />
-      </view>
-      <view class="form-item">
-        <text class="form-label">职位</text>
-        <input 
-          type="text" 
-          placeholder="请输入职位" 
-          value="{{formData.position}}"
-          bindinput="handleInput"
-          data-field="position"
-          class="form-input"
-        />
-      </view>
-    </view>
-  </modal>
 </view>

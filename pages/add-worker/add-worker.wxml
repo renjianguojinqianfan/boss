@@ -1,0 +1,59 @@
+<!-- 添加工人页面 - pages/add-worker/add-worker.wxml -->
+<view class="container">
+  <view class="page-title">添加工人</view>
+
+  <view class="form">
+    <view class="form-item">
+      <text class="form-label required">姓名</text>
+      <input 
+        type="text" 
+        placeholder="请输入工人姓名" 
+        value="{{name}}"
+        bindinput="onNameInput"
+        class="form-input"
+        maxlength="20"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label required">电话</text>
+      <input 
+        type="number" 
+        placeholder="请输入11位手机号" 
+        value="{{phone}}"
+        bindinput="onPhoneInput"
+        class="form-input"
+        maxlength="11"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">部门</text>
+      <input 
+        type="text" 
+        placeholder="请输入部门名称（选填）" 
+        value="{{department}}"
+        bindinput="onDeptInput"
+        class="form-input"
+        maxlength="30"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">职位</text>
+      <input 
+        type="text" 
+        placeholder="请输入职位（选填）" 
+        value="{{position}}"
+        bindinput="onPositionInput"
+        class="form-input"
+        maxlength="20"
+      />
+    </view>
+  </view>
+
+  <view class="button-group">
+    <button type="default" bindtap="cancel" class="btn-cancel">取消</button>
+    <button type="primary" bindtap="saveWorker" class="btn-save">保存</button>
+  </view>
+</view>
