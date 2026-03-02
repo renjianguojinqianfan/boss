@@ -1,0 +1,172 @@
+<!-- 签到记录页面 -->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">签到记录</text>
+    <text class="record-count">{{filteredRecords.length}} 条记录</text>
+  </view>
+
+  <!-- 筛选组件 -->
+  <view class="filter-section">
+    <!-- 日期筛选 -->
+    <view class="filter-group">
+      <text class="filter-label">日期范围：</text>
+      <view class="date-picker">
+        <picker mode="date" value="{{startDate}}" start="2024-01-01" end="{{currentDate}}" bindchange="bindStartDateChange">
+          <view class="picker">
+            {{startDate}}
+          </view>
+        </picker>
+        <text class="date-separator">至</text>
+        <picker mode="date" value="{{endDate}}" start="2024-01-01" end="{{currentDate}}" bindchange="bindEndDateChange">
+          <view class="picker">
+            {{endDate}}
+          </view>
+        </picker>
+      </view>
+    </view>
+    
+    <!-- 工人筛选 -->
+    <view class="filter-group">
+      <text class="filter-label">工人：</text>
+      <picker mode="selector" range="{{workerNames}}" range-key="name" value="{{selectedWorkerIndex}}" bindchange="bindWorkerChange">
+        <view class="picker">
+          {{selectedWorkerIndex === 0 ? '全部工人' : workerNames[selectedWorkerIndex - 1].name}}
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 筛选按钮 -->
+    <view class="filter-actions">
+      <button class="filter-btn" bindtap="applyFilter">应用筛选</button>
+      <button class="reset-btn" bindtap="resetFilter">重置</button>
+    </view>
+  </view>
+
+  <!-- 记录列表 -->
+  <view class="record-list">
+    <block wx:if="{{filteredRecords.length === 0}}">
+      <view class="empty-state">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">{{records.length === 0 ? '暂无签到记录' : '没有符合条件的记录'}}</text>
+        <text class="empty-hint">{{records.length === 0 ? '点击首页的"拍照签到"开始签到' : '请调整筛选条件'}}</text>
+      </view>
+    </block>
+    
+    <block wx:else>
+      <view class="record-item" wx:for="{{filteredRecords}}" wx:key="{{item.id}}" bindtap="viewRecordDetail" data-record="{{item}}" bindlongpress="handleLongPress" data-record-id="{{item.id}}">
+        <!-- 记录头部 -->
+        <view class="record-header">
+          <view class="worker-info">
+            <text class="worker-name">{{item.workerName}}</text>
+            <text class="worker-id">ID: {{item.workerId}}</text>
+          </view>
+          <text class="record-time">{{formatTime(item.timestamp)}}</text>
+        </view>
+        
+        <!-- 记录内容 -->
+        <view class="record-content">
+          <view class="record-image" bindtap="viewPhoto" data-photo-url="{{item.photoUrl}}">
+            <image src="{{item.photoUrl}}" mode="aspectFill"></image>
+            <view class="photo-overlay">
+              <text class="photo-icon">👁️</text>
+              <text class="photo-text">点击查看</text>
+            </view>
+          </view>
+          <view class="record-details">
+            <view class="detail-item">
+              <text class="detail-label">日期：</text>
+              <text class="detail-value">{{item.date}}</text>
+            </view>
+            <view class="detail-item">
+              <text class="detail-label">时间：</text>
+              <text class="detail-value">{{item.time}}</text>
+            </view>
+            <view class="detail-item">
+              <text class="detail-label">地点：</text>
+              <text class="detail-value">{{item.location}}</text>
+            </view>
+            <view class="detail-item" wx:if="{{item.latitude && item.longitude}}">
+              <text class="detail-label">坐标：</text>
+              <text class="detail-value">{{item.coordinateStr}}</text>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 记录底部 -->
+        <view class="record-footer">
+          <text class="record-status success">签到成功</text>
+          <text class="record-id">#{{item.id}}</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 加载动画 -->
+  <view class="loading" wx:if="{{isLoading}}">
+    <view class="loading-content">
+      <text>{{loadingText}}</text>
+    </view>
+  </view>
+</view>
+
+<!-- 记录详情模态框 -->
+<view class="detail-modal" wx:if="{{showDetailModal}}">
+  <view class="detail-modal-content">
+    <view class="detail-modal-header">
+      <text class="detail-modal-title">签到详情</text>
+      <text class="detail-modal-close" bindtap="closeDetailModal">✕</text>
+    </view>
+    <view class="detail-modal-body">
+      <view class="detail-modal-image" bindtap="viewPhoto" data-photo-url="{{currentRecord.photoUrl}}">
+        <image src="{{currentRecord.photoUrl}}" mode="aspectFill"></image>
+        <view class="photo-overlay">
+          <text class="photo-icon">👁️</text>
+          <text class="photo-text">点击查看大图</text>
+        </view>
+      </view>
+      <view class="detail-modal-info">
+        <view class="detail-item">
+          <text class="detail-label">工人：</text>
+          <text class="detail-value">{{currentRecord.workerName}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">工号：</text>
+          <text class="detail-value">{{currentRecord.workerId}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">日期：</text>
+          <text class="detail-value">{{currentRecord.date}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">时间：</text>
+          <text class="detail-value">{{currentRecord.time}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">地点：</text>
+          <text class="detail-value">{{currentRecord.location}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{currentRecord.latitude && currentRecord.longitude}}">
+          <text class="detail-label">坐标：</text>
+          <text class="detail-value">{{currentRecord.coordinateStr}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">记录时间：</text>
+          <text class="detail-value">{{formatTime(currentRecord.timestamp)}}</text>
+        </view>
+      </view>
+      <view class="detail-modal-actions">
+        <button class="delete-btn" bindtap="confirmDeleteRecord">删除记录</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 照片查看器 -->
+<view class="photo-viewer" wx:if="{{showPhotoViewer}}">
+  <view class="photo-viewer-content" catchtouchmove="true">
+    <text class="photo-viewer-close" bindtap="closePhotoViewer">✕</text>
+    <image class="photo-viewer-image" src="{{currentPhotoUrl}}" mode="aspectFit"></image>
+    <text class="photo-viewer-hint">双指缩放 / 单指拖动</text>
+  </view>
+</view>

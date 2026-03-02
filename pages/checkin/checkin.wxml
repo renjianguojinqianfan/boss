@@ -1,0 +1,89 @@
+<!-- 拍照签到页面 -->
+<view class="container">
+  <!-- 水印Canvas（隐藏） -->
+  <canvas canvas-id="watermarkCanvas" style="width: 1px; height: 1px; position: absolute; top: -1000px;"></canvas>
+  <!-- 工人选择区域 -->
+  <view class="worker-section">
+    <text class="label">选择工人：</text>
+    <picker 
+      class="picker" 
+      value="{{selectedWorkerIndex}}" 
+      range="{{workerNames}}" 
+      bindchange="bindWorkerChange"
+      disabled="{{workerNames.length === 0}}"
+    >
+      <view class="picker-text">
+        {{workerNames.length > 0 ? workerNames[selectedWorkerIndex] : '请先添加工人'}}
+      </view>
+    </picker>
+  </view>
+
+  <!-- 位置和时间信息 -->
+  <view class="info-section">
+    <view class="info-item">
+      <text class="info-label">当前位置：</text>
+      <text class="info-value">{{locationInfo}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">当前时间：</text>
+      <text class="info-value">{{currentTime}}</text>
+    </view>
+  </view>
+
+  <!-- 相机预览区域 -->
+  <view class="camera-section" wx:if="!hasTakenPhoto">
+    <camera 
+      class="camera" 
+      device-position="back" 
+      flash="off"
+      binderror="handleCameraError"
+    ></camera>
+    <view class="camera-tip">请对准工人进行拍照</view>
+  </view>
+
+  <!-- 照片预览区域 -->
+  <view class="preview-section" wx:else>
+    <image class="preview-image" src="{{photoPath}}" mode="aspectFill"></image>
+    <view class="preview-tip">照片已添加水印</view>
+  </view>
+
+  <!-- 操作按钮区域 -->
+  <view class="button-section">
+    <button 
+      class="button" 
+      type="primary" 
+      size="large" 
+      bindtap="takePhoto"
+      wx:if="!hasTakenPhoto"
+      disabled="{{workerNames.length === 0}}"
+    >
+      拍照
+    </button>
+    
+    <view wx:else class="button-group">
+      <button 
+        class="button secondary" 
+        type="default" 
+        size="large" 
+        bindtap="retakePhoto"
+      >
+        重新拍照
+      </button>
+      <button 
+        class="button primary" 
+        type="primary" 
+        size="large" 
+        bindtap="confirmCheckin"
+      >
+        确认签到
+      </button>
+    </view>
+  </view>
+
+  <!-- 加载动画 -->
+  <view class="loading" wx:if="isLoading">
+    <view class="loading-content">
+      <text>{{loadingText}}</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,59 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/workers/workers",
+    "pages/checkin/checkin",
+    "pages/records/records",
+    "pages/analytics/analytics"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#007AFF",
+    "navigationBarTitleText": "老板打卡系统",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#007AFF",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "pages/index/icon-home.png",
+        "selectedIconPath": "pages/index/icon-home-active.png"
+      },
+      {
+        "pagePath": "pages/workers/workers",
+        "text": "工人管理",
+        "iconPath": "pages/workers/icon-workers.png",
+        "selectedIconPath": "pages/workers/icon-workers-active.png"
+      },
+      {
+        "pagePath": "pages/checkin/checkin",
+        "text": "打卡",
+        "iconPath": "pages/checkin/icon-checkin.png",
+        "selectedIconPath": "pages/checkin/icon-checkin-active.png"
+      },
+      {
+        "pagePath": "pages/records/records",
+        "text": "记录",
+        "iconPath": "pages/records/icon-records.png",
+        "selectedIconPath": "pages/records/icon-records-active.png"
+      },
+      {
+        "pagePath": "pages/analytics/analytics",
+        "text": "分析",
+        "iconPath": "pages/analytics/icon-analytics.png",
+        "selectedIconPath": "pages/analytics/icon-analytics-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于记录打卡地点信息"
+    }
+  },
+  "sitemapLocation": "sitemap.json"
+}

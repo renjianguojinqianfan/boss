@@ -1,0 +1,84 @@
+<!-- 首页 -->
+<view class="container">
+  <!-- 欢迎信息 -->
+  <view class="welcome-section">
+    <text class="welcome-text">您好，{{userName}}</text>
+    <text class="date-text">{{currentDateText}}</text>
+  </view>
+  
+  <!-- 今日打卡统计 -->
+  <view class="card">
+    <text class="subtitle">今日打卡统计</text>
+    <view class="row">
+      <view class="col">
+        <view class="stat-card">
+          <text class="stat-value">{{todayCheckinCount}}</text>
+          <text class="stat-label">今日打卡</text>
+        </view>
+      </view>
+      <view class="col">
+        <view class="stat-card">
+          <text class="stat-value">{{totalWorkers}}</text>
+          <text class="stat-label">总工人</text>
+        </view>
+      </view>
+      <view class="col">
+        <view class="stat-card">
+          <text class="stat-value">{{checkinRate}}%</text>
+          <text class="stat-label">打卡率</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 快捷操作 -->
+  <view class="card">
+    <text class="subtitle">快捷操作</text>
+    <view class="row">
+      <view class="col">
+        <button class="btn btn-primary btn-full" bindtap="goToCheckin">
+          <text style="font-size: 28rpx;">📷 拍照签到</text>
+        </button>
+      </view>
+    </view>
+    <view class="row" style="margin-top: 20rpx;">
+      <view class="col">
+        <button class="btn btn-secondary btn-full" bindtap="goToRecords">
+          <text style="font-size: 26rpx;">📋 查看记录</text>
+        </button>
+      </view>
+      <view class="col">
+        <button class="btn btn-secondary btn-full" bindtap="goToWorkers">
+          <text style="font-size: 26rpx;">👥 工人管理</text>
+        </button>
+      </view>
+    </view>
+    <view class="row" style="margin-top: 20rpx;">
+      <view class="col">
+        <button class="btn btn-secondary btn-full" bindtap="goToAnalytics">
+          <text style="font-size: 26rpx;">📊 数据分析</text>
+        </button>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 最近签到记录 -->
+  <view class="card">
+    <view class="section-header">
+      <text class="subtitle">最近签到记录</text>
+      <text class="view-all" bindtap="goToRecords">查看全部</text>
+    </view>
+    <view wx:if="{{recentRecords.length > 0}}">
+      <view wx:for="{{recentRecords}}" wx:key="id" class="list-item">
+        <view class="list-item-content">
+          <text class="text">{{item.workerName}}</text>
+          <text class="text-secondary">{{formatTime(item.timestamp)}} · {{item.location}}</text>
+        </view>
+        <image src="{{item.photo}}" mode="aspectFill" style="width: 100rpx; height: 100rpx; border-radius: 8rpx;" />
+      </view>
+    </view>
+    <view wx:else class="empty">
+      <text class="empty-text">暂无签到记录</text>
+    </view>
+  </view>
+</view>

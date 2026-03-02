@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "拍照签到",
+  "usingComponents": {},
+  "disableScroll": false,
+  "backgroundTextStyle": "light",
+  "navigationBarBackgroundColor": "#007AFF",
+  "navigationBarTextStyle": "white"
+}

@@ -1,0 +1,78 @@
+<!-- 数据分析页面 -->
+<view class="container">
+  <!-- 时间范围选择器 -->
+  <view class="time-range-selector">
+    <view class="time-range-title">数据范围</view>
+    <view class="time-buttons">
+      <button 
+        class="time-button {{timeRange === 'week' ? 'active' : ''}}" 
+        bindtap="setTimeRange" 
+        data-range="week"
+      >
+        周
+      </button>
+      <button 
+        class="time-button {{timeRange === 'month' ? 'active' : ''}}" 
+        bindtap="setTimeRange" 
+        data-range="month"
+      >
+        月
+      </button>
+      <button 
+        class="time-button {{timeRange === 'year' ? 'active' : ''}}" 
+        bindtap="setTimeRange" 
+        data-range="year"
+      >
+        年
+      </button>
+    </view>
+  </view>
+
+  <!-- 数据概览卡片 -->
+  <view class="overview-cards">
+    <view class="overview-card">
+      <view class="card-title">总出勤人数</view>
+      <view class="card-value">{{overview.totalAttendance}}</view>
+    </view>
+    <view class="overview-card">
+      <view class="card-title">出勤率</view>
+      <view class="card-value">{{overview.attendanceRate}}%</view>
+    </view>
+    <view class="overview-card">
+      <view class="card-title">迟到人数</view>
+      <view class="card-value">{{overview.lateCount}}</view>
+    </view>
+  </view>
+
+  <!-- 出勤率统计图表 -->
+  <view class="chart-container">
+    <view class="chart-title">出勤统计</view>
+    <view class="chart-wrapper">
+      <canvas canvas-id="attendanceChart" class="chart"></canvas>
+    </view>
+  </view>
+
+  <!-- 迟到分析图表 -->
+  <view class="chart-container">
+    <view class="chart-title">迟到分析</view>
+    <view class="chart-wrapper">
+      <canvas canvas-id="lateChart" class="chart"></canvas>
+    </view>
+  </view>
+
+  <!-- 出勤率趋势图表 -->
+  <view class="chart-container">
+    <view class="chart-title">出勤率趋势</view>
+    <view class="chart-wrapper">
+      <canvas canvas-id="trendChart" class="chart"></canvas>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{isLoading}}" class="loading-overlay">
+    <view class="loading-content">
+      <view class="loading-spinner"></view>
+      <view class="loading-text">{{loadingText}}</view>
+    </view>
+  </view>
+</view>

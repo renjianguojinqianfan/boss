@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "工人管理",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "light"
+}

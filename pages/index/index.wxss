@@ -1,0 +1,159 @@
+/* 首页样式文件 */
+
+/* 引入全局样式 */
+@import '../../app.wxss';
+
+/* 首页特定样式 */
+.container {
+  padding-bottom: 20rpx;
+}
+
+/* 欢迎区域样式 */
+.welcome-section {
+  margin-bottom: 20rpx;
+  padding: 20rpx;
+  background-color: var(--primary-color);
+  border-radius: 12rpx;
+  color: #FFFFFF;
+}
+
+.welcome-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.date-text {
+  font-size: 24rpx;
+  opacity: 0.9;
+}
+
+/* 统计卡片样式 */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 160rpx;
+  background-color: #F8F9FA;
+  border-radius: 12rpx;
+  padding: 20rpx;
+}
+
+.stat-value {
+  font-size: 44rpx;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 8rpx;
+}
+
+.stat-label {
+  font-size: 22rpx;
+  color: var(--light-text-color);
+  text-align: center;
+}
+
+/* 快捷按钮样式 */
+.btn-primary {
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+}
+
+.btn-secondary {
+  height: 90rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+}
+
+/* 区域标题样式 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.view-all {
+  font-size: 22rpx;
+  color: var(--primary-color);
+}
+
+/* 最近记录样式 */
+.list-item {
+  padding: 25rpx;
+  border-bottom: 1rpx solid var(--border-color);
+  display: flex;
+  align-items: center;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item-content {
+  flex: 1;
+  margin-right: 20rpx;
+}
+
+.list-item-content .text {
+  font-size: 26rpx;
+  margin-bottom: 5rpx;
+  font-weight: 500;
+}
+
+.list-item-content .text-secondary {
+  font-size: 22rpx;
+  color: var(--light-text-color);
+}
+
+/* 三列布局调整 */
+.row {
+  display: flex;
+  margin: 0 -10rpx;
+}
+
+.col {
+  flex: 1;
+  padding: 0 10rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 响应式调整 */
+@media (max-width: 375px) {
+  .welcome-text {
+    font-size: 28rpx;
+  }
+  
+  .date-text {
+    font-size: 22rpx;
+  }
+  
+  .stat-value {
+    font-size: 36rpx;
+  }
+  
+  .stat-label {
+    font-size: 20rpx;
+  }
+  
+  .stat-card {
+    height: 140rpx;
+    padding: 15rpx;
+  }
+  
+  .btn-primary {
+    height: 90rpx;
+    font-size: 26rpx;
+  }
+  
+  .btn-secondary {
+    height: 80rpx;
+    font-size: 24rpx;
+  }
+}
