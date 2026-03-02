@@ -21,22 +21,10 @@ Page({
     currentPhotoUrl: '',
     selectedRecordId: ''
   },
-    records: [],
-    filteredRecords: [],
-    workers: [],
-    workerNames: [],
-    selectedWorkerIndex: 0,
-    startDate: '',
-    endDate: '',
-    currentDate: '',
-    isLoading: false,
-    loadingText: '',
-    showDetailModal: false,
-    showPhotoViewer: false,
-    currentRecord: null,
-    currentPhotoUrl: '',
-    selectedRecordId: ''
-  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
   
   /**
    * 生命周期函数--监听页面加载
