@@ -11,6 +11,27 @@ Page({
     // 页面加载
   },
 
+  /**
+   * 生命周期函数--监听页面显示
+   * 从其他页面返回时清空表单，避免显示之前输入的数据
+   */
+  onShow: function () {
+    this.clearForm();
+  },
+
+  /**
+   * 清空表单数据
+   */
+  clearForm: function () {
+    this.setData({
+      name: '',
+      phone: '',
+      department: '',
+      position: ''
+    });
+  },
+  // 输入处理
+
   // 输入处理
   onNameInput: function (e) {
     this.setData({ name: e.detail.value });

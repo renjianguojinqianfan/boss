@@ -11,10 +11,29 @@ Page({
   },
 
   onLoad: function (options) {
+    this.loadWorkerData(options);
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   * 重新加载工人数据，确保显示最新状态
+   */
+  onShow: function () {
+    // 如果有workerId，重新加载数据
+    if (this.data.workerId) {
+      this.loadWorkerData({ id: this.data.workerId });
+    }
+  },
+
+  /**
+   * 加载工人数据
+   * @param {Object} options - 页面参数
+   */
+  loadWorkerData: function (options) {
     // 获取传入的工人ID
     if (options.id) {
       const app = getApp();
-      const worker = app.globalData.workers.find(w => w.id === options.id);
+      const worker = app.globalData.workers.find(function(w) { return w.id === options.id; });
       if (worker) {
         this.setData({
           workerId: worker.id,
