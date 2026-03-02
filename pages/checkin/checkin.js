@@ -300,6 +300,11 @@ Page({
           wx.navigateTo({
             url: '/pages/records/records'
           });
+        setTimeout(function() {
+          // 使用 switchTab 跳转到记录页面（因为是 tabBar 页面）
+          wx.switchTab({
+            url: '/pages/records/records'
+          });
         }, 1000);
       } else {
         wx.showToast({

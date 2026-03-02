@@ -56,16 +56,21 @@ Page({
    */
   deleteWorker: function (e) {
     const workerId = e.currentTarget.dataset.id;
+    const that = this;
     
     wx.showModal({
       title: '确认删除',
       content: '确定要删除这个工人吗？',
-      success: (res) => {
+      success: function(res) {
         if (res.confirm) {
-          const workers = this.data.workers.filter(worker => worker.id !== workerId);
+          // 保存旧数据用于回滚
+          const oldWorkers = that.data.workers;
+          const workers = oldWorkers.filter(function(worker) {
+            return worker.id !== workerId;
+          });
           
           // 先更新页面数据（乐观更新）
-          this.setData({
+          that.setData({
             workers: workers
           });
 
@@ -74,13 +79,19 @@ Page({
           app.globalData.workers = workers;
           
           // 异步保存到本地存储
-          app.saveWorkers(workers, (success, error) => {
+          app.saveWorkers(workers, function(success, error) {
             if (success) {
               wx.showToast({
                 title: '删除成功',
                 icon: 'success'
               });
             } else {
+              // 回滚到旧数据
+              that.setData({
+                workers: oldWorkers
+              });
+              app.globalData.workers = oldWorkers;
+              
               wx.showToast({
                 title: '删除失败，请重试',
                 icon: 'none'

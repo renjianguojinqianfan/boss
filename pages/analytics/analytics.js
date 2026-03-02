@@ -308,8 +308,10 @@ Page({
         
         const dayLateRecords = filteredRecords.filter(record => {
           const recordDate = record.date === targetDate;
-          const recordHour = new Date(record.timestamp).getHours();
-          return recordDate && recordHour >= 9;
+          // 使用 record.time 而不是 record.timestamp
+          const timeStr = record.time || '08:00:00';
+          const hour = parseInt(timeStr.split(':')[0]);
+          return recordDate && hour >= 9;
         });
         
         data.push(dayLateRecords.length);
@@ -324,8 +326,10 @@ Page({
         
         const periodLateRecords = filteredRecords.filter(record => {
           const recordDate = new Date(record.date);
-          const recordHour = new Date(record.timestamp).getHours();
-          return recordDate >= start && recordDate <= end && recordHour >= 9;
+          // 使用 record.time 而不是 record.timestamp
+          const timeStr = record.time || '08:00:00';
+          const hour = parseInt(timeStr.split(':')[0]);
+          return recordDate >= start && recordDate <= end && hour >= 9;
         });
         
         data.push(periodLateRecords.length);
@@ -336,8 +340,10 @@ Page({
         const month = parseInt(label);
         const monthLateRecords = filteredRecords.filter(record => {
           const recordMonth = new Date(record.date).getMonth() + 1;
-          const recordHour = new Date(record.timestamp).getHours();
-          return recordMonth === month && recordHour >= 9;
+          // 使用 record.time 而不是 record.timestamp
+          const timeStr = record.time || '08:00:00';
+          const hour = parseInt(timeStr.split(':')[0]);
+          return recordMonth === month && hour >= 9;
         });
         
         data.push(monthLateRecords.length);
