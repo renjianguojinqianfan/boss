@@ -13,9 +13,10 @@ Page({
     currentTime: '',
     currentDate: '',
     isLoading: false,
-    loadingText: ''
+    loadingText: '',
+    locationError: false,  // 位置获取失败标志
+    locationRetryCount: 0  // 位置重试次数
   },
-
   onLoad: function(options) {
     console.log('拍照签到页面加载');
     this.initPage();
@@ -37,19 +38,43 @@ Page({
     this.updateCurrentTime();
     this.updateWorkers();
     
-    setTimeout(() => {
-      this.initCamera();
-    }, 100);
-    
-    setTimeout(() => {
-      this.getLocation();
-    }, 300);
-    
-    setTimeout(() => {
+    // 使用 Promise 并行初始化相机和位置
+    var that = this;
+    Promise.all([
+      this.initCameraPromise(),
+      this.getLocationPromise()
+    ]).then(function() {
       wx.hideLoading();
-      const loadTime = Date.now() - this.loadStartTime;
+      var loadTime = Date.now() - that.loadStartTime;
       console.log('打卡页面初始化完成，耗时:', loadTime, 'ms');
-    }, 500);
+    }).catch(function(error) {
+      wx.hideLoading();
+      console.error('初始化失败:', error);
+    });
+  },
+
+  // Promise 封装的相机初始化
+  initCameraPromise: function() {
+    var that = this;
+    return new Promise(function(resolve) {
+      that.initCamera();
+      // 相机初始化是异步的，给它一些时间
+      setTimeout(function() {
+        resolve();
+      }, 100);
+    });
+  },
+
+  // Promise 封装的位置获取
+  getLocationPromise: function() {
+    var that = this;
+    return new Promise(function(resolve) {
+      that.getLocation();
+      // 位置获取有5秒超时，这里等待它完成
+      setTimeout(function() {
+        resolve();
+      }, 300);
+    });
   },
 
   initCamera: function() {
@@ -130,7 +155,7 @@ Page({
   },
 
   getLocation: function() {
-    const that = this;
+    var that = this;
     
     wx.getLocation({
       type: 'wgs84',
@@ -139,18 +164,43 @@ Page({
       success: function(res) {
         that.setData({
           latitude: res.latitude,
-          longitude: res.longitude
+          longitude: res.longitude,
+          locationError: false,
+          locationRetryCount: 0
         });
         that.getAddress(res.latitude, res.longitude);
       },
       fail: function(error) {
         console.error('位置获取失败:', error);
+        var retryCount = that.data.locationRetryCount;
         that.setData({
-          locationInfo: '位置获取失败'
+          locationInfo: '位置获取失败，点击重试',
+          locationError: true,
+          locationRetryCount: retryCount + 1
         });
+        
+        // 如果是第一次失败，自动重试一次
+        if (retryCount === 0) {
+          console.log('自动重试获取位置...');
+          setTimeout(function() {
+            that.getLocation();
+          }, 1000);
+        }
       }
     });
   },
+
+  // 手动重试获取位置
+  retryGetLocation: function() {
+    if (this.data.locationError) {
+      this.setData({
+        locationInfo: '正在获取位置...',
+        locationError: false
+      });
+      this.getLocation();
+    }
+  },
+
 
   getAddress: function(latitude, longitude) {
     const that = this;
@@ -296,15 +346,6 @@ Page({
           title: '签到成功',
           icon: 'success'
         });
-        setTimeout(function() {
-          // 使用 switchTab 跳转到记录页面（因为是 tabBar 页面）
-          wx.switchTab({
-            url: '/pages/records/records'
-          });
-        }, 1000);
-          wx.navigateTo({
-            url: '/pages/records/records'
-          });
         setTimeout(function() {
           // 使用 switchTab 跳转到记录页面（因为是 tabBar 页面）
           wx.switchTab({
