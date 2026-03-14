@@ -3,19 +3,22 @@ Page({
   /**
    * 页面数据
    */
-  data: {
-    timeRange: 'week', // 时间范围：week, month, year
-    overview: {
-      totalAttendance: 0,
-      attendanceRate: 0,
-      lateCount: 0
-    },
-    isLoading: false,
-    loadingText: '',
-    attendanceData: [],
-    lateData: [],
-    trendData: []
-  },
+data: {
+timeRange: 'week', // 时间范围：week, month, year
+overview: {
+totalAttendance: 0,
+attendanceRate: 0,
+      lateCount: 0,
+      totalWorkDays: 0,
+      totalFullDays: 0,
+      totalHalfDays: 0
+},
+isLoading: false,
+loadingText: '',
+attendanceData: [],
+lateData: [],
+trendData: []
+},
   
   /**
    * 生命周期函数--监听页面加载
@@ -219,10 +222,28 @@ Page({
       return time >= 9;
     }).length;
     
+    // 按时长统计出勤（半天=0.5天，一天=1天）
+    let totalWorkDays = 0;
+    let totalFullDays = 0;
+    let totalHalfDays = 0;
+    
+    records.forEach(record => {
+      if (record.duration === 'half') {
+        totalWorkDays += 0.5;
+        totalHalfDays++;
+      } else {
+        totalWorkDays += 1;
+        totalFullDays++;
+      }
+    });
+    
     return {
       totalAttendance: totalAttendance,
       attendanceRate: attendanceRate,
-      lateCount: lateCount
+      lateCount: lateCount,
+      totalWorkDays: totalWorkDays.toFixed(1),
+      totalFullDays: totalFullDays,
+      totalHalfDays: totalHalfDays
     };
   },
   

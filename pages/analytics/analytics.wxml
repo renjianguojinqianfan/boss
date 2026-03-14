@@ -29,18 +29,46 @@
   </view>
 
   <!-- 数据概览卡片 -->
-  <view class="overview-cards">
-    <view class="overview-card">
-      <view class="card-title">总出勤人数</view>
-      <view class="card-value">{{overview.totalAttendance}}</view>
-    </view>
-    <view class="overview-card">
-      <view class="card-title">出勤率</view>
-      <view class="card-value">{{overview.attendanceRate}}%</view>
-    </view>
-    <view class="overview-card">
-      <view class="card-title">迟到人数</view>
-      <view class="card-value">{{overview.lateCount}}</view>
+<view class="overview-cards">
+<view class="overview-card">
+<view class="card-title">总出勤人数</view>
+<view class="card-value">{{overview.totalAttendance}}</view>
+</view>
+<view class="overview-card">
+<view class="card-title">出勤率</view>
+<view class="card-value">{{overview.attendanceRate}}%</view>
+</view>
+<view class="overview-card">
+<view class="card-title">迟到人数</view>
+<view class="card-value">{{overview.lateCount}}</view>
+</view>
+  </view>
+
+  <!-- 工作时长统计卡片 -->
+  <view class="duration-stats-section">
+    <view class="section-title">工作时长统计</view>
+    <view class="duration-cards">
+      <view class="duration-card total">
+        <view class="duration-icon">📊</view>
+        <view class="duration-info">
+          <view class="duration-label">总工作天数</view>
+          <view class="duration-value">{{overview.totalWorkDays}}</view>
+        </view>
+      </view>
+      <view class="duration-card full">
+        <view class="duration-icon">☀️</view>
+        <view class="duration-info">
+          <view class="duration-label">全天出勤</view>
+          <view class="duration-value">{{overview.totalFullDays}}<text class="unit">天</text></view>
+        </view>
+      </view>
+      <view class="duration-card half">
+        <view class="duration-icon">⛅</view>
+        <view class="duration-info">
+          <view class="duration-label">半天出勤</view>
+          <view class="duration-value">{{overview.totalHalfDays}}<text class="unit">天</text></view>
+        </view>
+      </view>
     </view>
   </view>
 
