@@ -65,3 +65,10 @@ Thumbs.db
 # WeChat Mini Program
 project.private.config.json
 miniprogram_npm/
+
+# Project specific
+使用说明 - 副本.txt
+nul
+boss/
+*.md.bak
+*.txt.bak
