@@ -1,197 +1,200 @@
-# AGENTS.md - 代理编码指南
+# AGENTS.md - AI Agent Coding Guidelines
 
-本文档为在此微信小程序项目中工作的AI代理提供上下文指导。
+Guidelines for AI agents working on this WeChat Mini Program (微信小程序) project.
 
-## 项目概述
+## Project Overview
 
-**项目类型**: 微信小程序  
-**编程语言**: JavaScript (ES6+)  
-**框架**: 微信原生小程序框架  
-**AppID**: wx98e05798d24cd888
+| Property | Value |
+|----------|-------|
+| Type | WeChat Mini Program |
+| Language | JavaScript (ES6+) |
+| Framework | WeChat Native Framework |
+| Package Manager | None (native wx.* APIs only) |
 
-## 构建与开发命令
+## Build & Test Commands
 
-### 运行项目
-
-1. **在微信开发者工具中打开**
-   - 启动微信开发者工具
-   - 导入项目: `E:\打卡系统\wechat-miniprogram`
-   - 或打开: `project.config.json`
-
-2. **编译与预览**
-   - 点击"编译"按钮 (或 `Ctrl+B`)
-
-### 测试
-
-**运行所有测试:**
 ```bash
+# Run all tests
 node test/test-runner.js all
-```
 
-**运行单个测试:**
-```bash
-node test/test-runner.js device    # 设备兼容性
-node test/test-runner.js network   # 网络兼容性
-node test/test-runner.js sdk       # SDK兼容性
-node test/test-runner.js page      # 页面性能
-node test/test-runner.js function  # 功能兼容性
-```
+# Run specific test suites
+node test/test-runner.js device    # Device compatibility
+node test/test-runner.js network   # Network compatibility
+node test/test-runner.js sdk       # SDK compatibility
+node test/test-runner.js page      # Page performance
+node test/test-runner.js function  # Function compatibility
 
-**运行代码验证:**
-```bash
+# Code validation
 node test/code-validation.js
+
+# Development (WeChat DevTools)
+# 1. Open WeChat DevTools
+# 2. Import project: E:\打卡系统\wechat-miniprogram
+# 3. Press Ctrl+B to compile
 ```
 
-## 代码风格指南
-
-### 文件组织结构
+## File Structure
 
 ```
 wechat-miniprogram/
-├── app.js              # 应用入口
-├── app.json            # 应用配置
-├── app.wxss            # 全局样式
-├── pages/              # 页面目录
-│   └── {page}/
-│       ├── {page}.js   # 页面逻辑
-│       ├── {page}.json # 页面配置
-│       ├── {page}.wxml # 页面模板
-│       └── {page}.wxss # 页面样式
-├── services/           # 服务层
-├── components/         # 可复用组件
-└── utils/              # 工具函数
+├── app.js                 # App entry
+├── app.json               # App config
+├── app.wxss               # Global styles
+├── pages/{page}/          # Page files
+│   ├── {page}.js          # Page logic
+│   ├── {page}.json        # Page config
+│   ├── {page}.wxml        # Page template
+│   └── {page}.wxss        # Page styles
+├── services/              # Singleton services
+├── components/            # Reusable components
+└── utils/                 # Utility functions
 ```
 
-### 命名规范
+## Naming Conventions
 
-| 类型 | 规范 | 示例 |
+| Type | Convention | Example |
 |------|------------|---------|
-| 文件 | 短横线连接 | `storage-service.js` |
-| 类 | 大驼峰 | `StorageService` |
-| 函数 | 小驼峰 | `getWorkers()` |
-| 变量 | 小驼峰 | `workerList` |
-| 常量 | 全大写下划线 | `MAX_ERROR_LOGS` |
-| 存储键 | 全大写下划线 | `WORKERS: 'workers'` |
+| Files | kebab-case | `storage-service.js` |
+| Classes | PascalCase | `StorageService` |
+| Functions | camelCase | `getWorkers()` |
+| Variables | camelCase | `workerList` |
+| Constants | UPPER_SNAKE_CASE | `MAX_ERROR_LOGS` |
+| Storage Keys | UPPER_SNAKE_CASE | `WORKERS: 'workers'` |
+| Components | kebab-case | `loading-spinner` |
 
-### 导入/导出模式
+## Module System (CommonJS Only)
 
-**使用 CommonJS (小程序必需):**
 ```javascript
-// 导入
+// Import
 const storageService = require('./services/storage-service');
+const { formatDate } = require('./utils/util');
 
-// 导出单例
+// Export singleton
 const storageService = new StorageService();
 module.exports = storageService;
 
-// 具名导出 (工具函数)
+// Named exports (utilities)
 module.exports = { formatDate, formatTime };
 ```
 
-### JSDoc 注释
+**NEVER use ES modules** (`import`/`export`) - WeChat Mini Programs require CommonJS.
 
-为公共函数添加 JSDoc 注释:
-```javascript
-/**
- * 保存工人到存储
- * @param {Array} workers - 工人列表
- * @returns {Promise<boolean>} 成功状态
- */
-saveWorkers(workers) { }
-```
+## Error Handling
 
-### 错误处理
+Always use try-catch with centralized error handler:
 
-**始终使用 try-catch 配合集中式错误处理器:**
 ```javascript
 try {
   const workers = await storageService.getWorkers();
 } catch (error) {
-  console.error('获取工人列表失败:', error);
-  errorHandler.handle(error, '获取工人列表失败');
+  console.error('Failed to get workers:', error);
+  errorHandler.handle(error, 'Failed to get workers');
 }
 ```
 
-**错误类型 (来自 error-handler.js):**
-- `ERROR_TYPES.NETWORK` - 网络错误
-- `ERROR_TYPES.STORAGE` - 存储错误
-- `ERROR_TYPES.PERMISSION` - 权限错误
-- `ERROR_TYPES.BUSINESS` - 业务逻辑错误
-- `ERROR_TYPES.UNKNOWN` - 未知错误
+**Error Types** (from error-handler.js):
+- `ERROR_TYPES.NETWORK` - Network errors
+- `ERROR_TYPES.STORAGE` - Storage errors
+- `ERROR_TYPES.PERMISSION` - Permission errors
+- `ERROR_TYPES.BUSINESS` - Business logic errors
+- `ERROR_TYPES.UNKNOWN` - Unknown errors
 
-### 页面生命周期模式
+## Page Pattern
 
 ```javascript
 Page({
-  data: { /* 页面数据 */ },
+  data: { /* page data */ },
   
-  onLoad: function(options) { 
+  onLoad: function(options) {
     this.initPage();
   },
-  onShow: function() { 
+  onShow: function() {
     this.updateData();
   },
-  onReady: function() { },
-  onHide: function() { },
-  onUnload: function() { }
+  
+  // Private methods
+  initPage: function() {
+    const app = getApp();
+    // Access global data via app.globalData
+  }
 });
 ```
 
-### 全局 App 访问
+## Service Pattern (Singleton)
 
 ```javascript
-// 获取应用实例
-const app = getApp();
+class ServiceName {
+  constructor() {
+    this.STORAGE_KEYS = { KEY: 'key' };
+  }
+  
+  /**
+   * Method description
+   * @param {Type} param - Description
+   * @returns {Promise<Type>} Result
+   */
+  async methodName(param) {
+    return new Promise((resolve, reject) => {
+      wx.apiName({
+        success: (res) => resolve(res),
+        fail: (err) => reject(err)
+      });
+    });
+  }
+}
 
-// 访问全局数据
-const workers = app.globalData.workers;
-
-// 使用应用方法
-app.saveWorkers(workers);
-app.showLoading('加载中...');
+module.exports = new ServiceName();
 ```
 
-### 数据存储
+## Global App Access
 
-**存储键名 (定义在 StorageService 中):**
 ```javascript
-this.STORAGE_KEYS = {
+const app = getApp();
+const workers = app.globalData.workers;
+app.showLoading('Loading...');
+```
+
+## Key Services
+
+| Service | Purpose |
+|---------|---------|
+| `storage-service.js` | Local data persistence |
+| `ui-service.js` | Toasts, modals, loading |
+| `error-handler.js` | Centralized error handling |
+| `network-manager.js` | Network status & retry logic |
+| `device-manager.js` | Device capability detection |
+| `performance-monitor.js` | Performance monitoring |
+
+## Storage Keys
+
+```javascript
+STORAGE_KEYS = {
   WORKERS: 'workers',
   RECORDS: 'records',
   ERROR_LOGS: 'errorLogs'
-};
+}
 ```
 
-### CSS/WXSS 指南
+## WXSS Guidelines
 
-- 使用 `rpx` 进行响应式尺寸设置
-- 遵循 BEM-like 命名: `.page__header`, `.page__header--active`
-- 样式限定在页面/组件范围内
-- 在 `app.wxss` 中定义通用样式模式
+- Use `rpx` for responsive sizing
+- BEM-like naming: `.page__element--modifier`
+- Scope styles to page/component
+- Define patterns in `app.wxss`
 
-### 常见陷阱
+## Common Pitfalls
 
-1. **不要使用 ES 模块** - 使用 CommonJS (`require`/`module.exports`)
-2. **不要使用 Node.js API** - 使用微信的 `wx.*` API
-3. **注意 `this` 上下文** - 使用箭头函数或 `.bind(this)`
-4. **检查初始化状态** - App 数据在 `onLoad` 中可能尚未准备好
-5. **处理权限** - 始终检查相机/位置权限
+1. **Never use ES modules** - Use `require`/`module.exports`
+2. **Never use Node.js APIs** - Use `wx.*` APIs only
+3. **Watch `this` context** - Use arrow functions or `.bind(this)`
+4. **Check initialization** - App data may not be ready in `onLoad`
+5. **Handle permissions** - Always check camera/location permissions
+6. **No DOM manipulation** - Use `setData()` to update view
+7. **Data flow**: Services → App → Page via `setData()`
 
-## 关键服务
+## Architecture
 
-| 服务 | 用途 |
-|---------|---------|
-| `storage-service.js` | 本地数据持久化 |
-| `ui-service.js` | 提示框、模态框、加载动画 UI |
-| `error-handler.js` | 集中式错误处理 |
-| `network-manager.js` | 网络状态与重试逻辑 |
-| `device-manager.js` | 设备能力检测 |
-| `performance-monitor.js` | 性能监控 |
-
-## 架构说明
-
-- **状态管理**: 应用 `globalData` + 页面 `data` 通过 `setData()`
-- **数据流**: 服务层 → 应用 → 页面
-- **错误处理**: 通过 `error-handler` 服务集中处理
-- **性能**: 设备感知策略 (图片质量、动画)
-- **存储**: 仅本地存储，数据持续到应用卸载
+- **State**: `app.globalData` + page `data` via `setData()`
+- **Error Handling**: Centralized through `error-handler`
+- **Storage**: Local only (persists until app uninstall)
+- **Performance**: Device-aware strategies (image quality, animations)

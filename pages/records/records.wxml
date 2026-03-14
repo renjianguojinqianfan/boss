@@ -6,6 +6,14 @@
     <text class="record-count">{{filteredRecords.length}} 条记录</text>
   </view>
 
+  <!-- 导出按钮 -->
+  <view class="export-section">
+    <button class="export-btn" bindtap="exportRecords" loading="{{isExporting}}" disabled="{{isExporting}}">
+      <text class="export-icon">📊</text>
+      <text>导出Excel</text>
+    </button>
+  </view>
+
   <!-- 筛选组件 -->
   <view class="filter-section">
     <!-- 日期筛选 -->
@@ -56,12 +64,15 @@
     <block wx:else>
       <view class="record-item" wx:for="{{filteredRecords}}" wx:key="{{item.id}}" bindtap="viewRecordDetail" data-record="{{item}}" bindlongpress="handleLongPress" data-record-id="{{item.id}}">
         <!-- 记录头部 -->
-        <view class="record-header">
-          <view class="worker-info">
-            <text class="worker-name">{{item.workerName}}</text>
-            <text class="worker-id">ID: {{item.workerId}}</text>
+<view class="record-header">
+<view class="worker-info">
+<text class="worker-name">{{item.workerName}}</text>
+<text class="worker-id">ID: {{item.workerId}}</text>
           </view>
-          <text class="record-time">{{formatTime(item.timestamp)}}</text>
+          <view class="record-meta">
+            <text class="duration-tag {{item.duration === 'half' ? 'half' : 'full'}}">{{item.durationLabel || '一天'}}</text>
+<text class="record-time">{{formatTime(item.timestamp)}}</text>
+        </view>
         </view>
         
         <!-- 记录内容 -->
@@ -141,6 +152,10 @@
         <view class="detail-item">
           <text class="detail-label">时间：</text>
           <text class="detail-value">{{currentRecord.time}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">时长：</text>
+          <text class="detail-value">{{currentRecord.durationLabel || '一天'}}</text>
         </view>
         <view class="detail-item">
           <text class="detail-label">地点：</text>

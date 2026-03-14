@@ -1,26 +1,31 @@
 // 签到记录页面逻辑
+const exportService = require('../../services/export-service');
+
+Page({
+// 签到记录页面逻辑
 Page({
   /**
    * 页面数据
    */
-  data: {
-    records: [],
-    filteredRecords: [],
-    workers: [],
-    workerNames: [],
-    workerMap: {},
-    selectedWorkerIndex: 0,
-    startDate: '',
-    endDate: '',
-    currentDate: '',
-    isLoading: false,
-    loadingText: '',
-    showDetailModal: false,
-    showPhotoViewer: false,
-    currentRecord: null,
-    currentPhotoUrl: '',
-    selectedRecordId: ''
-  },
+data: {
+records: [],
+filteredRecords: [],
+workers: [],
+workerNames: [],
+workerMap: {},
+selectedWorkerIndex: 0,
+startDate: '',
+endDate: '',
+currentDate: '',
+isLoading: false,
+loadingText: '',
+showDetailModal: false,
+showPhotoViewer: false,
+currentRecord: null,
+currentPhotoUrl: '',
+    selectedRecordId: '',
+    isExporting: false
+},
 
   /**
    * 生命周期函数--监听页面加载
@@ -403,4 +408,39 @@ Page({
   onUnload: function() {
     console.log('签到记录页面卸载');
   }
+  
+  /**
+   * 导出记录到Excel/CSV
+   */
+  exportRecords: async function() {
+    if (this.data.isExporting) return;
+    
+    // 检查是否有记录
+    if (this.data.records.length === 0) {
+      wx.showToast({
+        title: '暂无数据可导出',
+        icon: 'none'
+      });
+      return;
+    }
+    
+    this.setData({ isExporting: true });
+    
+    try {
+      const result = await exportService.exportToExcel();
+      wx.showToast({ 
+        title: `导出成功: ${result.recordCount}条记录`, 
+        icon: 'success',
+        duration: 2000
+      });
+    } catch (error) {
+      wx.showModal({
+        title: '导出失败',
+        content: error.message || '请重试',
+        showCancel: false
+      });
+    } finally {
+      this.setData({ isExporting: false });
+    }
+  },
 });

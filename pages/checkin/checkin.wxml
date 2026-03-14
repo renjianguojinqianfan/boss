@@ -93,8 +93,26 @@
       </view>
     </picker>
   </view>
-
   <!-- 底部操作按钮 -->
+
+  <!-- 工作时长选择（仅在拍照前显示） -->
+  <view class="duration-section" wx:if="{{!hasTakenPhoto}}">
+    <text class="section-title">选择工作时长：</text>
+    <view class="duration-options">
+      <view class="duration-btn {{selectedDuration === 'half' ? 'active' : ''}}" 
+            bindtap="selectDuration" 
+            data-duration="half">
+        <text class="duration-label">半天</text>
+        <text class="duration-hours">(4小时)</text>
+      </view>
+      <view class="duration-btn {{selectedDuration === 'full' ? 'active' : ''}}" 
+            bindtap="selectDuration" 
+            data-duration="full">
+        <text class="duration-label">一天</text>
+        <text class="duration-hours">(8小时)</text>
+      </view>
+    </view>
+  </view>
   <view class="action-section" wx:if="{{hasTakenPhoto}}">
     <button class="btn-secondary" bindtap="retakePhoto">重新拍照</button>
     <button class="btn-primary" bindtap="confirmCheckin">确认签到</button>

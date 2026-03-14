@@ -16,6 +16,11 @@ App({
       this.checkPermissions();
     }, 1000);
     
+    // 检查是否需要备份提醒
+    setTimeout(() => {
+      this.checkBackupReminder();
+    }, 2000);
+    
     console.log('小程序启动');
   },
 
@@ -196,6 +201,11 @@ App({
       
       record.id = Date.now().toString();
       record.timestamp = new Date().toISOString();
+      // 确保时长字段有默认值
+      if (!record.duration) {
+        record.duration = 'full';
+        record.durationLabel = '一天';
+      }
       const records = this.globalData.records;
       records.push(record);
       
@@ -359,6 +369,39 @@ App({
       this.globalData.platform = platformInfo.platform;
       this.globalData.isHarmonyOS = platformInfo.isHarmonyOS;
       console.log('平台信息:', platformInfo);
+    }
+  }
+  },
+
+  /**
+   * 检查是否需要备份提醒
+   */
+  checkBackupReminder: function() {
+    const lastExport = wx.getStorageSync('LAST_EXPORT_TIME');
+    const now = new Date();
+    
+    // 计算距离上次导出的天数
+    const daysSinceExport = lastExport ? 
+      Math.floor((now - new Date(lastExport)) / (1000 * 60 * 60 * 24)) : 999;
+    
+    // 如果超过30天未导出，显示提醒
+    if (daysSinceExport >= 30) {
+      const daysText = lastExport ? `${daysSinceExport}天` : '很久';
+      
+      wx.showModal({
+        title: '备份提醒',
+        content: `您已${daysText}未备份考勤数据，建议立即导出备份，防止数据丢失。`,
+        confirmText: '立即导出',
+        cancelText: '稍后再说',
+        success: (res) => {
+          if (res.confirm) {
+            // 跳转到记录页面
+            wx.switchTab({
+              url: '/pages/records/records'
+            });
+          }
+        }
+      });
     }
   }
 });

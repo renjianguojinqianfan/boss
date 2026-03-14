@@ -15,7 +15,8 @@ Page({
     isLoading: false,
     loadingText: '',
     locationError: false,  // 位置获取失败标志
-    locationRetryCount: 0  // 位置重试次数
+    locationRetryCount: 0,  // 位置重试次数
+    selectedDuration: 'full'  // 默认选中"一天"
   },
   onLoad: function(options) {
     console.log('拍照签到页面加载');
@@ -130,12 +131,20 @@ Page({
     });
   },
 
-  bindWorkerChange: function(e) {
-    const index = e.detail.value;
-    const worker = this.data.workers[index];
+bindWorkerChange: function(e) {
+const index = e.detail.value;
+const worker = this.data.workers[index];
+this.setData({
+selectedWorkerIndex: index,
+selectedWorker: worker
+});
+  },
+
+  // 选择工作时长
+  selectDuration: function(e) {
+    const duration = e.currentTarget.dataset.duration;
     this.setData({
-      selectedWorkerIndex: index,
-      selectedWorker: worker
+      selectedDuration: duration
     });
   },
 
@@ -327,16 +336,18 @@ Page({
       mask: true
     });
     
-    const record = {
-      workerId: this.data.selectedWorker.id,
-      workerName: this.data.selectedWorker.name,
-      date: this.data.currentDate,
-      time: this.data.currentTime,
-      location: this.data.locationInfo,
-      latitude: this.data.latitude,
-      longitude: this.data.longitude,
-      photoUrl: this.data.photoPath
-    };
+const record = {
+workerId: this.data.selectedWorker.id,
+workerName: this.data.selectedWorker.name,
+date: this.data.currentDate,
+time: this.data.currentTime,
+location: this.data.locationInfo,
+latitude: this.data.latitude,
+longitude: this.data.longitude,
+      photoUrl: this.data.photoPath,
+      duration: this.data.selectedDuration,
+      durationLabel: this.data.selectedDuration === 'half' ? '半天' : '一天'
+};
     
     const app = getApp();
     app.addRecord(record, function(success, error) {
